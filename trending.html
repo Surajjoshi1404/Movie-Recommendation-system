@@ -1,0 +1,6 @@
+<h2>Trending Movies</h2>
+<ul>
+    {% for movie in movies %}
+        <li>{{ movie.title }} ({{ movie.genres }})</li>
+    {% endfor %}
+</ul>

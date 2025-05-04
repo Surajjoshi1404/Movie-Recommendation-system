@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ movie.title }} - Movie Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --text-color: #333;
+            --light-bg: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-color);
+        }
+
+        .movie-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .movie-header {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .movie-poster {
+            width: 300px;
+            height: 450px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .movie-info {
+            flex: 1;
+        }
+
+        .movie-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .movie-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            color: #666;
+        }
+
+        .movie-rating {
+            color: #f39c12;
+            font-weight: bold;
+        }
+
+        .movie-overview {
+            margin: 2rem 0;
+            line-height: 1.6;
+        }
+
+        .recommendations-section {
+            margin-top: 3rem;
+        }
+
+        .recommendations-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .recommendations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .movie-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .movie-card img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .movie-card-content {
+            padding: 1rem;
+        }
+
+        .movie-card-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .movie-card-meta {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 2rem;
+            color: var(--secondary-color);
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="movie-container">
+        <div class="movie-header">
+            <img src="{{ movie.poster_path }}" alt="{{ movie.title }}" class="movie-poster">
+            <div class="movie-info">
+                <h1 class="movie-title">{{ movie.title }}</h1>
+                <div class="movie-meta">
+                    <span><i class="fas fa-star"></i> {{ movie.rating }}</span>
+                    <span><i class="fas fa-calendar"></i> {{ movie.release_date }}</span>
+                    <span><i class="fas fa-globe"></i> {{ movie.country }}</span>
+                    <span><i class="fas fa-language"></i> {{ movie.language }}</span>
+                </div>
+                <div class="movie-genres">
+                    {% for genre in movie.genres.split('|') %}
+                    <span class="badge bg-primary">{{ genre }}</span>
+                    {% endfor %}
+                </div>
+                <div class="movie-overview">
+                    <h3>Overview</h3>
+                    <p>{{ movie.overview }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="recommendations-section">
+            <h2 class="recommendations-title">Similar Movies</h2>
+            <div class="recommendations-grid">
+                {% for rec in recommendations %}
+                <a href="{{ url_for('movie_detail', movie_id=rec.id) }}" class="movie-card">
+                    <img src="{{ rec.poster_path }}" alt="{{ rec.title }}">
+                    <div class="movie-card-content">
+                        <h3 class="movie-card-title">{{ rec.title }}</h3>
+                        <div class="movie-card-meta">
+                            <span><i class="fas fa-star"></i> {{ rec.rating }}</span>
+                            <span>{{ rec.release_date }}</span>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+
+        <a href="{{ url_for('index') }}" class="back-link">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

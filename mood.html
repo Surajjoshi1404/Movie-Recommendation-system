@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Mood-Based Recommendations</h2>
+    <form method="post" class="mb-4">
+        <label for="mood" class="form-label">Select your mood:</label>
+        <select name="mood" id="mood" class="form-select w-auto d-inline mx-2">
+            <option value="" disabled {% if not selected_mood %}selected{% endif %}>-- Choose Mood --</option>
+            {% for mood in moods %}
+                <option value="{{ mood }}" {% if selected_mood == mood %}selected{% endif %}>{{ mood.capitalize() }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-primary btn-sm">Get Recommendations</button>
+    </form>
+    {% if selected_mood %}
+        {% if recommendations %}
+            <h4>Recommended Movies for "{{ selected_mood.capitalize() }}" Mood</h4>
+            <div class="row">
+                {% for movie in recommendations %}
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100">
+                            {% if movie.poster_url %}
+                                <img src="{{ movie.poster_url }}" class="card-img-top" alt="{{ movie.title }} poster" style="height:300px;object-fit:cover;">
+                            {% else %}
+                                <img src="https://via.placeholder.com/300x450?text=No+Image" class="card-img-top" alt="No poster" style="height:300px;object-fit:cover;">
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">{{ movie.title }}</h5>
+                                <p class="card-text">{{ movie.genres }}</p>
+                                <a href="{{ url_for('movie_detail', movie_id=movie.id) }}" class="btn btn-primary btn-sm">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-danger">No recommendations found for this mood.</p>
+        {% endif %}
+    {% else %}
+        <p class="text-muted">Please select your mood to get recommendations.</p>
+    {% endif %}
+</div>
+{% endblock %}

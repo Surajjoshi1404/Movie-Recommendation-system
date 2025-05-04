@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- User Profile Card -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h4 class="card-title">
+                        {% if user %}
+                            {{ user.username }}
+                        {% else %}
+                            Guest User
+                        {% endif %}
+                    </h4>
+                    <p class="card-text">
+                        <strong>Email:</strong>
+                        {% if user %}
+                            {{ user.email }}
+                        {% else %}
+                            Not signed in
+                        {% endif %}
+                        <br>
+                        <strong>Member since:</strong>
+                        {% if user %}
+                            {{ user.created_at.strftime('%B %d, %Y') }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                        <br>
+                        <strong>Last login:</strong>
+                        {% if user %}
+                            {{ user.last_login.strftime('%B %d, %Y') }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                        <br>
+                        <strong>Movies rated:</strong>
+                        {% if rated_movies %}
+                            {{ rated_movies|length }}
+                        {% else %}
+                            0
+                        {% endif %}
+                        <br>
+                        <strong>Average rating:</strong>
+                        {% if rated_movies %}
+                            {{ "%.1f"|format(rated_movies|map(attribute='rating')|sum / rated_movies|length) }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </p>
+                    <a href="{{ url_for('mood_recommend') }}" class="btn btn-info btn-sm mt-2">Mood-based Recommendations</a>
+                </div>
+            </div>
+            <!-- Trending Movies -->
+            <div class="card mt-3">
+                <div class="card-header bg-warning text-dark">
+                    <strong>Trending Movies</strong>
+                </div>
+                <ul class="list-group list-group-flush">
+                    {% for movie in trending_movies %}
+                        <li class="list-group-item">
+                            <a href="{{ url_for('movie_detail', movie_id=movie.id) }}">{{ movie.title }}</a>
+                            <span class="badge bg-secondary">{{ movie.genres }}</span>
+                        </li>
+                    {% else %}
+                        <li class="list-group-item">No trending movies.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Rated Movies and Recommendations -->
+        <div class="col-md-8">
+            <h3>Your Movie Ratings</h3>
+            <ul>
+                {% for item in rated_movies %}
+                    <li>
+                        <strong>{{ item.movie.title }}</strong> ({{ item.movie.year }}) - Rated: {{ item.rating }}
+                    </li>
+                {% else %}
+                    <li>No ratings yet.</li>
+                {% endfor %}
+            </ul>
+
+            <h2>Recommended for You</h2>
+            <div class="row recommendations">
+                {% if recommendations %}
+                    {% for movie in recommendations %}
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100">
+                                {% if movie.poster_url %}
+                                    <img src="{{ movie.poster_url }}" class="card-img-top" alt="{{ movie.title }} poster" style="height:300px;object-fit:cover;">
+                                {% else %}
+                                    <img src="https://via.placeholder.com/300x450?text=No+Image" class="card-img-top" alt="No poster" style="height:300px;object-fit:cover;">
+                                {% endif %}
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ movie.title }}</h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">
+                                        {% if movie.year %} ({{ movie.year }}){% endif %}
+                                    </h6>
+                                    {% if movie.genres %}
+                                        <div class="mb-2">
+                                            {% for genre in movie.genres.split('|') %}
+                                                <span class="badge bg-secondary">{{ genre }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                    {% if movie.rating %}
+                                        <p class="card-text mb-1">
+                                            <strong>Avg Rating:</strong> {{ "%.1f"|format(movie.rating) }} / 5
+                                        </p>
+                                    {% endif %}
+                                    {% if explanations and explanations[movie.id] %}
+                                        <p class="card-text text-success">
+                                            <em>{{ explanations[movie.id] }}</em>
+                                        </p>
+                                    {% endif %}
+                                    <a href="{{ url_for('movie_detail', movie_id=movie.id) }}" class="btn btn-primary btn-sm">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-12">
+                        <p>No recommendations available yet.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

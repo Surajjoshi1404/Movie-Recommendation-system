@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your Watchlist</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="top-nav">
+        <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('profile') }}">Profile</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </nav>
+    <h1>{{ user }}'s Watchlist</h1>
+    <div class="container">
+        {% if movies %}
+            {% for movie in movies %}
+                <div class="movie-card">
+                    <div class="movie-title">{{ movie.title }}</div>
+                    <div class="movie-genres">{{ movie.genres }}</div>
+                    <form method="post" action="{{ url_for('remove_from_watchlist', movie_id=movie.id) }}">
+                        <button type="submit" style="background:#d63031; color:#fff; border:none; border-radius:8px; padding:6px 14px; font-weight:500; cursor:pointer;">
+                            <i class="fas fa-times"></i> Remove
+                        </button>
+                    </form>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>Your watchlist is empty.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

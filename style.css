@@ -1,0 +1,56 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.search-section {
+    margin-bottom: 20px;
+}
+
+.search-section input {
+    padding: 8px;
+    width: 300px;
+}
+
+.filters {
+    margin-bottom: 20px;
+}
+
+.alphabet-filter a, .genre-filter a {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 2px;
+    text-decoration: none;
+    color: #333;
+    border: 1px solid #ddd;
+}
+
+.alphabet-filter a.active, .genre-filter a.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.movies-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.movie-card {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+.movie-card a {
+    text-decoration: none;
+    color: #333;
+}
